@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PortableAISkillManifest",
+  "description": "Schema definition for Portable AI Skill MVP v0.1 Manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "name",
+    "version",
+    "status",
+    "description",
+    "entryPoint",
+    "canonicalRepository",
+    "principles",
+    "supportedCapabilities",
+    "supportedPredicates",
+    "capabilityGaps",
+    "verificationTolerance",
+    "runtimeRequirements"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "enum": ["0.1.0"]
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "entryPoint": {
+      "type": "string"
+    },
+    "canonicalRepository": {
+      "type": "string",
+      "format": "uri"
+    },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "skillDoc": { "type": "string" },
+        "apiDoc": { "type": "string" },
+        "passportDoc": { "type": "string" },
+        "contractDoc": { "type": "string" }
+      }
+    },
+    "principles": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "supportedCapabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "supportedPredicates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "PERPENDICULAR_TO",
+          "PARALLEL_TO",
+          "EQUAL_LENGTH",
+          "POINT_ON_CIRCLE"
+        ]
+      }
+    },
+    "capabilityGaps": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "verificationTolerance": {
+      "type": "object",
+      "required": ["epsilon", "policy"],
+      "properties": {
+        "epsilon": { "type": "number" },
+        "policy": { "type": "string" }
+      }
+    },
+    "runtimeRequirements": {
+      "type": "object",
+      "required": ["node", "npm", "runtimeLanguage"],
+      "properties": {
+        "node": { "type": "string" },
+        "npm": { "type": "string" },
+        "runtimeLanguage": { "type": "string" }
+      }
+    },
+    "interAgentProtocols": {
+      "type": "object",
+      "properties": {
+        "gsaVersion": { "type": "string" },
+        "pgsVersion": { "type": "string" },
+        "zeroTrustVerification": { "type": "boolean" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

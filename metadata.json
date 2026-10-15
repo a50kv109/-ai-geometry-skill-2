@@ -1,0 +1,8 @@
+{
+  "name": "AI Geometry Skill",
+  "description": "Deterministic, headless geometry verification and research instrument for external AI agents.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

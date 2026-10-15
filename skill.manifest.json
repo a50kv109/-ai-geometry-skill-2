@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "0.1.0",
+  "name": "ai-geometry-skill",
+  "version": "1.0.0",
+  "status": "FROZEN_RESEARCH_TOOL",
+  "description": "Deterministic, headless 2D Euclidean geometry verification and research instrument for external AI reasoning agents.",
+  "entryPoint": "src/headless/HeadlessGeometrySession.ts",
+  "canonicalRepository": "https://github.com/a50kv109/ai-geometry-skill.git",
+  "documentation": {
+    "skillDoc": "SKILL.md",
+    "apiDoc": "API.md",
+    "passportDoc": "docs/AI_GEOMETRY_SKILL_PASSPORT.md",
+    "contractDoc": "docs/SKILL_CONTRACT.md"
+  },
+  "principles": [
+    "REASON OUTSIDE. VERIFY INSIDE.",
+    "TOOL-VERIFIED FACT ≠ AGENT INTERPRETATION ≠ AGENT HYPOTHESIS",
+    "PRODUCER CLAIM ≠ RECEIVER TRUTH",
+    "CAPABILITY_GAP ≠ FALSE",
+    "DECLARED ≠ DISCOVERED ≠ RUNTIME_CHECKED",
+    "DOCUMENTED ≠ RUNTIME VERIFIED"
+  ],
+  "supportedCapabilities": [
+    "PLANAR_PRIMITIVES_2D",
+    "ANALYTICAL_CONSTRUCTIONS_MACROS",
+    "ALGEBRAIC_INTERSECTIONS",
+    "ROOT_PRESERVATION_INDEXING",
+    "EXACT_METRIC_MEASUREMENTS",
+    "RECEIVER_OWNED_PREDICATE_VERIFICATION",
+    "DISCRETE_KINEMATICS_DAG_RECOMPUTATION",
+    "ISOLATED_SCRATCHPADS_ROLLBACK",
+    "GSA_ZERO_TRUST_PACKAGING"
+  ],
+  "supportedPredicates": [
+    "PERPENDICULAR_TO",
+    "PARALLEL_TO",
+    "EQUAL_LENGTH",
+    "POINT_ON_CIRCLE"
+  ],
+  "capabilityGaps": [
+    "NO_3D_STEREOMETRY",
+    "NO_ARBITRARY_ANGLE_MEASUREMENT",
+    "NO_COMPOUND_POLYGON_PRIMITIVES",
+    "NO_GLOBAL_BRANCH_TREE",
+    "NO_LIVE_REACTIVE_INTERSECTIONS"
+  ],
+  "verificationTolerance": {
+    "epsilon": 0.0001,
+    "policy": "RECEIVER_OWNED_NON_NEGOTIABLE"
+  },
+  "runtimeRequirements": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0",
+    "runtimeLanguage": "TypeScript / Node.js (tsx)"
+  },
+  "interAgentProtocols": {
+    "gsaVersion": "0.1.0",
+    "pgsVersion": "1.0",
+    "zeroTrustVerification": true
+  }
+}
