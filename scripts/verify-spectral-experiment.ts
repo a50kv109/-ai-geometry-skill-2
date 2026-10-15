@@ -10,7 +10,7 @@ const TRIANGLES = {
 
 for (const [type, ptsU] of Object.entries(TRIANGLES)) {
   const facts = createFactMapFromHost({ pointsU: ptsU as any, R: 1 });
-  const pts = [facts.coord_A, facts.coord_B, facts.coord_C];
+  const pts = [facts.coord_A as unknown as { x: number; y: number }, facts.coord_B as unknown as { x: number; y: number }, facts.coord_C as unknown as { x: number; y: number }];
   const contour = Array.from({ length: 64 }, (_, i) => {
     const t = i / 64;
     const idx = Math.floor(t * 3);
