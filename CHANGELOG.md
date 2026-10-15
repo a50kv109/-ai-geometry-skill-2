@@ -5,7 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.1.0-spectral] - 2026-10-15 — Experimental Spectral Geometry Module (TSL-01 – TSL-08)
+
+### Added
+- **Experimental Spectral Analysis (`FourierV2`)**:
+  - Complex Discrete Fourier Transform (`computeComplexDFT`) for 2D geometric contours.
+  - Spectral passport calculation (`computeSpectralPassportV2`) with harmonic truncation and error bounding (`computeMaxReconstructionError`).
+  - Invariance validation suites covering rotation, uniform translation, and reverse traversal.
+- **Standalone Spectral Test Suite (`test:spectral`)**:
+  - Automated verification script (`src/experimental/spectral/test_fourier_v2.ts`) integrated into test routines.
+- **CLI Research Utility (`cli_research.ts`)**:
+  - Secure JSON-in/JSON-out command-line research interface for evaluating contour spectral descriptors and RMS reconstruction metrics.
+- **Updated Documentation & Integration Standards**:
+  - Comprehensive updates across `docs/spectral_passport_integration.md`, `docs/spectral_passport_schema.md`, and capability models.
+
+---
+
 ## [1.0.0-skill] - 2026-10-04 — AI Geometry Skill v1.0.0 (FROZEN RESEARCH TOOL)
+
 
 ### Added
 - **Headless AI Geometry Skill (`HeadlessGeometrySession`)**:

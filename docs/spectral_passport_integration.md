@@ -36,7 +36,10 @@ Enforces traceability and authoritativeness:
 
 The integration adheres strictly to the existing AI Geometry Skill epistemic and architectural boundaries:
 - **Separation**: The spectral passport is an *experimental shape descriptor* and does not replace the canonical geometric SSOT.
-- **Verification**: Exact vertex reconstruction is achieved exclusively through the inclusion of coordinate-bearing landmarks, not through spectral approximation alone.
-- **Zero-Trust**: All analysis results in a `HybridPassport` must be treated as untrusted hypotheses by receiving agents, subjected to local independent verification against the canonical geometry kernel.
+- **FourierV2 Analytical Robustness**: Implements complex Discrete Fourier Transform (`computeComplexDFT`), harmonic truncation, reconstruction error bounds (`computeMaxReconstructionError`), and invariance verifications (rotation, translation, reverse traversal).
+- **CLI Research Interface**: `src/experimental/spectral/cli_research.ts` provides a secure JSON-in/JSON-out research tool for evaluating contour spectral passports.
+- **Automated Verification**: Run spectral tests standalone via `npm run test:spectral` (invoking `test_fourier_v2.ts`).
+- **Zero-Trust**: All analysis results must be treated as untrusted hypotheses by receiving agents, subjected to local independent verification against the canonical geometry kernel.
 
-*Reference Implementation*: `src/experimental/spectral/Fourier.ts` and `scripts/tsl-02-hybrid-experiment.ts`.
+*Reference Implementation*: `src/experimental/spectral/FourierV2.ts`, `src/experimental/spectral/test_fourier_v2.ts`, and `src/experimental/spectral/cli_research.ts`.
+

@@ -232,7 +232,22 @@ npx tsx examples/basic-verification/index.ts
 
 ---
 
-## 14. Canonical Documentation Index
+## 13.1. Experimental Spectral Geometry Module (TSL-01 – TSL-08)
+
+The skill includes an experimental spectral analysis module under `src/experimental/spectral/` (`FourierV2.ts`), providing complex Discrete Fourier Transform analysis, harmonic contour passport calculation, and reconstruction error bounding for 2D geometric shapes.
+
+- **Run standalone spectral tests**:
+  ```bash
+  npm run test:spectral
+  ```
+- **CLI Research Utility**:
+  ```bash
+  npx tsx src/experimental/spectral/cli_research.ts <input_json_path>
+  ```
+- **Documentation**: See [`docs/spectral_passport_integration.md`](./docs/spectral_passport_integration.md) and [`docs/spectral_passport_schema.md`](./docs/spectral_passport_schema.md).
+
+---
+
 
 All documentation is located in the [`docs/`](./docs/) directory using relative Markdown links:
 
@@ -246,6 +261,8 @@ All documentation is located in the [`docs/`](./docs/) directory using relative 
 - [`docs/PROVENANCE_EPISTEMIC_MODEL.md`](./docs/PROVENANCE_EPISTEMIC_MODEL.md) — Epistemic truth tiers and lineage.
 - [`docs/GEOMETRY_RESEARCH_METHODOLOGY.md`](./docs/GEOMETRY_RESEARCH_METHODOLOGY.md) — Autonomous experimental protocol.
 - [`docs/PATTERN_LIBRARY.md`](./docs/PATTERN_LIBRARY.md) — Audited Geometric Reasoning Pattern Palette.
+- [`docs/spectral_passport_integration.md`](./docs/spectral_passport_integration.md) — Experimental Spectral Analysis and FourierV2 Integration (TSL-01 – TSL-08).
+- [`docs/spectral_passport_schema.md`](./docs/spectral_passport_schema.md) — Spectral Passport Schema Hierarchy.
 
 ---
 
