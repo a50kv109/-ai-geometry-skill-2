@@ -136,6 +136,8 @@ To integrate or use the Skill without trial and error, follow this canonical rea
 - **Kinematics & Dynamic Geometry**: Moving free vertices (`move()`) dynamically cascades dependent macro constructions.
 - **Scratchpads & Rollbacks**: `fork()` and `rollback()` create 100% isolated sandboxes for speculative exploration.
 - **GSA / PGS-2D Packaging**: Export and import self-describing solution envelopes with independent Zero-Trust verification.
+- **Canonical Coordinates & Addressing Layers**: Explicit transformations between Layer A (circular polar angle $\theta$), Layer B (1D boundary perimeter metric $s \in [0, P)$), and Layer C (Cartesian $(x, y)$), with deterministic sorting (`worldCanonicalOrdering`).
+- **Deterministic Reasoning Anchor (DRA)**: Structured reasoning discipline for AI agents (`docs/AGENT_GUIDANCE_DRA.md`) operationalizing `REASON OUTSIDE. VERIFY INSIDE.`
 
 ---
 
@@ -145,6 +147,7 @@ The Skill is **not an omniscient automated theorem solver** and explicitly docum
 
 - **NO 3D Stereometry**: Strictly limited to 2D Euclidean planimetry ($\mathbb{R}^2$). Spatial polyhedra and 3D cross-sections are out of scope (`CAPABILITY GAP`).
 - **NO Arbitrary Angle Measurement**: Verifies orthogonality ($90^\circ$) and parallelism ($0^\circ / 180^\circ$); does not measure arbitrary angles (`ANGLE_VALUE` is a `CAPABILITY GAP`).
+- **NO Conflation of Polar Angles with Vertex Angles**: Polar coordinate angles $\theta \in [0, 360^\circ)$ are extrinsic circular addresses and cannot be substituted for internal polygon angles $\angle V$ (`GUARD-CANON-01`).
 - **NO Compound Polygon Primitive**: Pentagons, trapezoids, etc., exist only as collections of segments (`POLYGON` is a `CAPABILITY GAP`).
 - **NO Global Solution Branch Tree (`BranchTree`)**: `rootIndex` is a local parametric order ($t_0 < t_1$) along a directed line vector; reversing vector direction swaps root indices. It does not represent a persistent topological branch identity.
 - **NO Automatic Intersection Recomputation**: Points created from `intersect()` are static materialized operation snapshots (`Materialized Snapshot != Live Relational Entity`). When parent lines move, intersected points do not automatically follow.
@@ -209,26 +212,37 @@ The Skill is **not an omniscient automated theorem solver** and explicitly docum
 # 1. Install dependencies
 npm install
 
-# 2. Run the complete test suite (27/27 test suites)
+# 2. Run the complete test suite (31/31 test suites)
 npm run test:all
 
-# 3. Run TypeScript typecheck (0 errors)
+# 3. Run individual focused test suites
+npm run test:kernel                 # Autonomous kernel tests (74 tests)
+npm run test:env                    # Verification Stand contract tests (18 tests)
+npm run test:contract-guards        # Headless contract guards (9 suites, 48 checks)
+npm run test:canonical              # Canonical coordinates math (6 suites, 29 checks)
+npm run test:canonical-integration  # End-to-end canonical integration (5 steps, 17 checks)
+npm run test:spectral               # Experimental spectral analysis suite
+
+# 4. Run TypeScript typecheck (0 errors)
 npm run lint
 
-# 4. Compile production build
+# 5. Compile production build
 npm run build
 
-# 5. Run the minimal standalone example
+# 6. Run the minimal standalone example
 npx tsx examples/basic-verification/index.ts
 ```
 
 ### Confirmed Audit Baseline
-- **Autonomous Kernel Tests**: 74 / 74 PASS (100%)
-- **Environment Contract Tests**: 18 / 18 PASS (100%)
-- **Headless Skill PoC Tests**: 11 / 11 PASS (100%)
-- **Total Test Suites**: **27 / 27 PASS (100%)**
+- **Autonomous Kernel Tests (`npm run test:kernel`)**: 74 / 74 PASS (100%)
+- **Environment Contract Tests (`npm run test:env`)**: 18 / 18 PASS (100%)
+- **Contract Guards Tests (`npm run test:contract-guards`)**: 9 / 9 suites PASS (48 assertions, 100%)
+- **Canonical Coordinates Tests (`npm run test:canonical`)**: 6 / 6 suites PASS (29 assertions, 100%)
+- **Canonical Integration Tests (`npm run test:canonical-integration`)**: 5 / 5 steps PASS (17 assertions, 100%)
+- **Experimental Spectral Tests (`npm run test:spectral`)**: PASS (100%)
+- **Total Test Suites Chained in `test:all`**: **31 / 31 PASS (100%)**
 - **Typecheck (`tsc --noEmit`)**: **0 errors**
-- **Production Build**: **Vite build clean**
+- **Production Build**: **Vite build clean (0 errors)**
 
 ---
 
@@ -248,6 +262,7 @@ The skill includes an experimental spectral analysis module under `src/experimen
 
 ---
 
+## 14. Documentation Map
 
 All documentation is located in the [`docs/`](./docs/) directory using relative Markdown links:
 
@@ -256,15 +271,16 @@ All documentation is located in the [`docs/`](./docs/) directory using relative 
 - [`docs/SKILL_CONTRACT.md`](./docs/SKILL_CONTRACT.md) — Semantic Contract v0.4 specifications.
 - [`docs/CAPABILITY_MODEL.md`](./docs/CAPABILITY_MODEL.md) — Supported vs unsupported capabilities.
 - [`docs/KNOWN_LIMITATIONS.md`](./docs/KNOWN_LIMITATIONS.md) — Unified capability gap register and non-assumptions.
-- [`docs/AGENT_GUIDANCE_DRA.md`](./docs/AGENT_GUIDANCE_DRA.md) — Recommended agent reasoning pattern (DRA).
+- [`docs/AGENT_GUIDANCE_DRA.md`](./docs/AGENT_GUIDANCE_DRA.md) — Recommended agent reasoning pattern (DRA: Recognize $\to$ Decide $\to$ Verify $\to$ Separate $\to$ Update).
+- [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md) — Normative Standard: Extrinsic Coordinates, Perimeter Parameterization, and Intrinsic Invariants.
+- [`docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md`](./docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md) — Authoritative verification audit report.
 - [`docs/GSA_SPECIFICATION.md`](./docs/GSA_SPECIFICATION.md) — GSA envelope and Zero-Trust verification.
 - [`docs/PROVENANCE_EPISTEMIC_MODEL.md`](./docs/PROVENANCE_EPISTEMIC_MODEL.md) — Epistemic truth tiers and lineage.
 - [`docs/GEOMETRY_RESEARCH_METHODOLOGY.md`](./docs/GEOMETRY_RESEARCH_METHODOLOGY.md) — Autonomous experimental protocol.
 - [`docs/PATTERN_LIBRARY.md`](./docs/PATTERN_LIBRARY.md) — Audited Geometric Reasoning Pattern Palette.
 - [`docs/spectral_passport_integration.md`](./docs/spectral_passport_integration.md) — Experimental Spectral Analysis and FourierV2 Integration (TSL-01 – TSL-08).
 - [`docs/spectral_passport_schema.md`](./docs/spectral_passport_schema.md) — Spectral Passport Schema Hierarchy.
-- [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md) — Normative Standard: Extrinsic Coordinates, Perimeter Parameterization, and Intrinsic Invariants.
-- [`docs/REASONING_GUIDANCE_PATTERNS.md`](./docs/REASONING_GUIDANCE_PATTERNS.md) — Catalog of Agent Reasoning Guidance Patterns (DRA, Structure Recognition, Proving Strategies).
+- [`docs/REASONING_GUIDANCE_PATTERNS.md`](./docs/REASONING_GUIDANCE_PATTERNS.md) — Catalog of Agent Reasoning Guidance Patterns.
 
 ---
 

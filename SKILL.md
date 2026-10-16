@@ -56,6 +56,10 @@ Check Runtime Available?
    - If an operation is unsupported (e.g. 3D stereometry, arbitrary angle values), the Skill returns `CAPABILITY_GAP`, **never** `verified: false` or a hallucinated floating-point approximation.
 5. **`PRODUCER CLAIM ≠ RECEIVER TRUTH`**:
    - In multi-agent pipelines, receiving agents must independently re-verify all claims locally inside an isolated session under the Zero-Trust protocol.
+6. **`EXTRINSIC POSITION ANGLE ≠ INTRINSIC POLYGON ANGLE`** (`GUARD-CANON-01`):
+   - Polar coordinate angle $\theta \in [0, 360^\circ)$ is an observer-dependent circular address, not an internal polygon angle $\angle V$ (see `docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`).
+7. **`CONTOUR PARAMETERIZATION ≠ POLAR ANGLE`**:
+   - Boundary distance $s \in [0, P)$ parameterizes the 1D polygon boundary; it does not map linearly to circle polar angles along chords.
 
 ---
 
@@ -104,3 +108,14 @@ const gsa = session.exportSolutionArtifact();
 - **Arbitrary Angular Measurement**: Only $90^\circ$ and $0^\circ/180^\circ$ verified; `ANGLE_VALUE` is a capability gap.
 - **Compound Polygons**: Handled as sets of segments.
 - **Intersection Snapshots**: `intersect()` produces static snapshots, not live reactive constraints.
+
+---
+
+## 5. Normative Documentation & Verification References
+
+- **Canonical Geometry & Coordinates**: [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md)
+- **Agent Reasoning Guidance (DRA)**: [`docs/AGENT_GUIDANCE_DRA.md`](./docs/AGENT_GUIDANCE_DRA.md)
+- **Final Audit Report**: [`docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md`](./docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md)
+- **Skill Passport**: [`docs/AI_GEOMETRY_SKILL_PASSPORT.md`](./docs/AI_GEOMETRY_SKILL_PASSPORT.md)
+- **Zero-Trust Artifact Protocol**: [`docs/GSA_SPECIFICATION.md`](./docs/GSA_SPECIFICATION.md)
+

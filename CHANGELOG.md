@@ -5,6 +5,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [Unreleased] - 2026-10-16 — Canonical Coordinates, DRA Guidance & Audit Synchronization
+
+### Added
+- **Canonical Coordinate Addressing Layers (`src/utils/canonicalCoordinates.ts`)**:
+  - Layer A: Angular address on bounding circle ($\alpha \in [0, 360^\circ)$, $[0, 2\pi)$) with CCW/CW arc metric length calculation.
+  - Layer B: Perimeter contour coordinate ($s \in [0, P)$, normalized parameter $t = s/P$) along polygon boundaries with exact segment localization and closure.
+  - Layer C: Direct 2D Cartesian coordinates $(x, y)$.
+  - Extrinsic observer-dependent ordering (`worldCanonicalOrdering`) preserving original `entityId` and Cartesian positions without mutation.
+- **Deterministic Reasoning Anchor (DRA) Agent Guidance (`docs/AGENT_GUIDANCE_DRA.md`)**:
+  - 5-step operational loop for external AI reasoning models: Recognize $\to$ Decide $\to$ Verify $\to$ Separate $\to$ Update.
+  - Formal epistemic separation: `TOOL-VERIFIED FACT` $\neq$ `AGENT INTERPRETATION` $\neq$ `AGENT HYPOTHESIS`.
+  - Protocol for conscious refusal (`DRA = NO`) and capability gap declaration.
+- **Normative Specification (`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`)**:
+  - Formal specification of coordinate addressing layers, perimeter tracing, and invariant preservation.
+  - Definition of `GUARD-CANON-01` forbidding conflation between extrinsic polar angle $\theta$ and internal polygon angle $\angle V$.
+- **Test Suites & Contract Guards**:
+  - `src/utils/tests/canonicalCoordinates.test.ts` (`npm run test:canonical`): 6 suites, 29 boundary and mathematical checks.
+  - `src/headless/tests/testCanonicalCoordinatesIntegration.ts` (`npm run test:canonical-integration`): 5 integration steps, 17 assertions.
+  - Suite 9 added to `src/headless/tests/testContractGuards.ts`: Guardrail and invariant preservation verification.
+  - Chained all suites into `npm run test:all` (31 total test scripts).
+- **Authoritative Verification Audit Report (`docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md`)**:
+  - Full audit report detailing test execution, TypeScript cleanliness, production build status, contract stability, and known runtime limitations.
+
+### Changed
+- Synchronized `docs/CAPABILITY_MODEL.md`, `docs/GEOMETRY_MODEL.md`, `docs/SEMANTIC_INTERFACE.md`, `docs/SKILL_CONTRACT.md`, `SKILL.md`, and `README.md` to reflect three-tier coordinate addressing and `GUARD-CANON-01`.
+
+---
+
 ## [1.1.0-spectral] - 2026-10-15 — Experimental Spectral Geometry Module (TSL-01 – TSL-08)
 
 ### Added

@@ -53,7 +53,24 @@ $$x = x_O + R \cos\left(\frac{2\pi \alpha^\circ}{360^\circ}\right), \quad y = y_
 For a polygon boundary (e.g. triangle $\triangle ABC$):
 The coordinate $s \in [0, a+b+c)$ accumulates piecewise along consecutive directed segments with distinct linear segments, while polar angles relative to the circumcenter vary non-linearly along each chord.
 
-This specification establishes the canonical definitions, conversion formulas, canonical identity ordering rules, and agent guardrails required to eliminate ambiguity across all tiers.
+### 1.1. Mandatory Epistemic Boundaries & Non-Equivalences
+
+External AI agents consuming this specification MUST strictly enforce five core boundary principles:
+
+1. **Extrinsic Polar Angle $\neq$ Intrinsic Polygon Angle** (`GUARD-CANON-01`):
+   - The polar coordinate $\theta \in [0, 360^\circ)$ represents an observer-dependent coordinate address on the bounding circle.
+   - It does not equal the vertex interior angle $\angle V$. Equating them is a categorical error.
+2. **Contour Coordinate $\neq$ Polar Angle**:
+   - The contour perimeter coordinate $s \in [0, P)$ (or normalized parameter $t = s/P$) parameterizes the 1D polygon boundary.
+   - On chords, the mapping between polar angle $\theta$ and perimeter coordinate $s$ is strictly non-linear.
+3. **Representation Normalization $\neq$ Geometric Mutation**:
+   - Canonical ordering (`worldCanonicalOrdering`) normalizes representation and assigns stable canonical roles (`P_0`, `P_1`, ...).
+   - It does **not** alter, project, or mutate the underlying Euclidean coordinates $(x, y)$ or shape geometry.
+4. **Preservation of `entityId` and Lineage Provenance**:
+   - Canonical indexing attaches roles while strictly preserving the caller's `originalId`, entity lineage, and parent history.
+5. **Deterministic Addressing $\neq$ Geometric Proof**:
+   - Assigning canonical addresses or computing perimeter coordinates does not constitute a theorem proof.
+   - Truth verification requires analytical predicate evaluation (`HeadlessGeometrySession.verify()`).
 
 ---
 

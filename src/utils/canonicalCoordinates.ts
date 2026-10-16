@@ -317,24 +317,34 @@ export function worldCanonicalOrdering(
     };
   });
 
-  // 2. Sort ascending by polar angle [0, 360)
+  // 2. Sort primary by polar angle [0, 360)
   withPolar.sort((a, b) => a.thetaDeg - b.thetaDeg);
 
-  // 3. Check for distinctness / coincident angles under policy
-  for (let i = 0; i < withPolar.length - 1; i++) {
-    const diff = withPolar[i + 1].thetaDeg - withPolar[i].thetaDeg;
-    if (diff < coincidentEpsilonDeg) {
-      // Coincident or near-coincident angle: tie-break deterministically by originalId
-      if (Math.abs(diff) < 1e-9 && withPolar[i + 1].originalId < withPolar[i].originalId) {
-        const tmp = withPolar[i];
-        withPolar[i] = withPolar[i + 1];
-        withPolar[i + 1] = tmp;
-      }
+  // 3. Form deterministic clusters of near-coincident angles (within coincidentEpsilonDeg)
+  // and resolve each cluster deterministically by originalId
+  const clustered: typeof withPolar = [];
+  let i = 0;
+  while (i < withPolar.length) {
+    let j = i + 1;
+    while (j < withPolar.length && (withPolar[j].thetaDeg - withPolar[i].thetaDeg) < coincidentEpsilonDeg) {
+      j++;
     }
+    // Sub-array [i, j) is a cluster of near-coincident points
+    const cluster = withPolar.slice(i, j);
+    // Sort cluster deterministically: angle first, then lexicographically by originalId
+    cluster.sort((a, b) => {
+      const angleDiff = a.thetaDeg - b.thetaDeg;
+      if (Math.abs(angleDiff) < 1e-9) {
+        return a.originalId.localeCompare(b.originalId);
+      }
+      return angleDiff;
+    });
+    clustered.push(...cluster);
+    i = j;
   }
 
   // 4. Assign canonical role P_0, P_1, P_2...
-  return withPolar.map((p, idx) => ({
+  return clustered.map((p, idx) => ({
     canonicalIndex: idx,
     canonicalRole: `P_${idx}`,
     originalId: p.originalId,
