@@ -5,9 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [Unreleased] - 2026-10-16 — Canonical Coordinates, DRA Guidance & Audit Synchronization
+## [Unreleased] - 2026-10-16 — VerifierService v1, Complete Geometric Verification & Canonical Coordinates
 
 ### Added
+- **VerifierService (`src/engines/verifierService.ts`)**:
+  - Independent geometric verification service for perpendicular bisector construction macro.
+  - `validatePlan`: Pre-execution plan validation ensuring required parameters and non-degenerate preconditions.
+  - `verifyGeometry`: Post-execution mathematical verification checking object existence, provenance-based source point identification, perpendicularity ($\vec{AB} \cdot \vec{I_1I_2} = 0$), midpoint passage (collinearity), and equidistance ($\|A, I_1\| = \|B, I_1\|$).
+  - Explicit epistemic separation of verification results: `planValid`, `geometryValid` (`VERIFIED` / `REJECTED`), and `constructionPathVerified` (`NOT_VERIFIED` pending `ExecutionLog`).
+- **Regression Test Suites (`src/engines/tests/testPerpendicularBisector.ts`)**:
+  - Added tests 8 through 11 covering valid verification, perpendicularity violations, shifted line misalignments, and missing object rejections.
 - **Canonical Coordinate Addressing Layers (`src/utils/canonicalCoordinates.ts`)**:
   - Layer A: Angular address on bounding circle ($\alpha \in [0, 360^\circ)$, $[0, 2\pi)$) with CCW/CW arc metric length calculation.
   - Layer B: Perimeter contour coordinate ($s \in [0, P)$, normalized parameter $t = s/P$) along polygon boundaries with exact segment localization and closure.

@@ -60,3 +60,21 @@ Semantic relations do not persist as static labels. They are **epistemic states*
 | `RULE_PERPENDICULAR_BISECTOR` | $l \perp AB \land M \in l \land \|PA\|=\|PB\|$ | Line passes through midpoint $M$, orthogonal to vector $\vec{AB}$, equidistant points. |
 | `RULE_ANGLE_BISECTOR` | $\angle AVL = \angle BVL = \frac{1}{2}\angle AVB$ | Line passes through vertex $V$, unit direction vector equals normalized angle bisector. |
 | `RULE_TANGENT_RADIUS_ORTHOGONALITY` | $l \perp OT \land \text{dist}(O, l) = R$ | Orthogonal distance from center equals $R$, radius vector $\vec{OT}$ orthogonal to line. |
+
+---
+
+## 5. Runtime VerifierService (`src/engines/verifierService.ts`)
+
+To support independent verification of construction macro execution without altering the frozen Geometry Core, `VerifierService` provides an external verification layer:
+
+1. **`validatePlan(plan)`**: Pre-execution check ensuring the construction plan is valid and well-formed.
+2. **`verifyGeometry(state, plan)`**: Post-execution mathematical verification of the perpendicular bisector construction, evaluating:
+   - **Object Existence**: Verifies that the constructed line, intersection points, and auxiliary circles exist in `state`.
+   - **Source Identification**: Extracts source segment points $A$ and $B$ via provenance and plan commands.
+   - **Perpendicularity**: Validates orthogonal dot product $\vec{AB} \cdot \vec{I_1I_2} = 0$.
+   - **Midpoint Passage**: Validates collinearity (cross product / midpoint on bisector line).
+   - **Equidistance**: Validates $\|A, I_1\| = \|B, I_1\|$.
+3. **Epistemic Separation**: Returns structured verification report:
+   - `planValid`: boolean
+   - `geometryValid`: `'VERIFIED'` | `'REJECTED'` | `'NOT_VERIFIED'`
+   - `constructionPathVerified`: `'NOT_VERIFIED'` (path auditing via `ExecutionLog` is not implemented in v1.0.0).

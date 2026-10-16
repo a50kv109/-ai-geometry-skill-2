@@ -137,6 +137,7 @@ To integrate or use the Skill without trial and error, follow this canonical rea
 - **Scratchpads & Rollbacks**: `fork()` and `rollback()` create 100% isolated sandboxes for speculative exploration.
 - **GSA / PGS-2D Packaging**: Export and import self-describing solution envelopes with independent Zero-Trust verification.
 - **Canonical Coordinates & Addressing Layers**: Explicit transformations between Layer A (circular polar angle $\theta$), Layer B (1D boundary perimeter metric $s \in [0, P)$), and Layer C (Cartesian $(x, y)$), with deterministic sorting (`worldCanonicalOrdering`).
+- **Runtime VerifierService (`src/engines/verifierService.ts`)**: Independent pre-execution plan validation (`validatePlan`) and post-execution geometric verification (`verifyGeometry`) ensuring strict mathematical compliance of perpendicular bisector macro constructions (perpendicularity, midpoint passage, equidistance).
 - **Deterministic Reasoning Anchor (DRA)**: Structured reasoning discipline for AI agents (`docs/AGENT_GUIDANCE_DRA.md`) operationalizing `REASON OUTSIDE. VERIFY INSIDE.`
 
 ---

@@ -70,3 +70,10 @@ To prevent false reasoning, external AI agents interacting with AI Geometry Skil
 ### 9. Spectral Analysis Reconstruction Fidelity
 - **Classification**: `IMPLEMENTATION BEHAVIOR / GAP`
 - **Behavior**: Spectral passports (Fourier-based) provide derived shape descriptors (contour approximation). Exact vertex recovery from the spectral passport *alone* is not guaranteed due to reconstruction error in truncated harmonic series. Exact identity preservation is only guaranteed when using the **Hybrid Spectral-Geometric Passport** containing coordinate-bearing `Landmark`s.
+
+### 10. VerifierService Scope & Limitations (`src/engines/verifierService.ts`)
+- **Classification**: `IMPLEMENTATION BEHAVIOR / CAPABILITY GAP`
+- **Behavior**: 
+  - **Path Verification**: `constructionPathVerified` remains `NOT_VERIFIED` because path auditing via an immutable `ExecutionLog` is not implemented in v1.0.0.
+  - **Specialization**: `VerifierService` is specifically tailored for the perpendicular bisector construction macro and is not a universal solver or verifier for arbitrary geometric construction sequences.
+  - **Completeness**: Invariant and geometric checks (`verifyGeometry`) detect basic tampering, orthogonality violations, and missing objects, but do not provide formal proof against all possible complex/adversarial coordinate substitutions (no full Oracle-Leak proof).
