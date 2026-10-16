@@ -132,3 +132,5 @@ The following boundaries are documented as non-blocking capability gaps for v1.0
 | [PROVENANCE_EPISTEMIC_MODEL.md](./PROVENANCE_EPISTEMIC_MODEL.md) | Epistemic truth tiers and provenance lineage |
 | [GEOMETRY_RESEARCH_METHODOLOGY.md](./GEOMETRY_RESEARCH_METHODOLOGY.md) | Autonomous experimental protocol |
 | [PATTERN_LIBRARY.md](./PATTERN_LIBRARY.md) | Audited Geometric Reasoning Pattern Palette (GRPP) |
+| [CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md](./CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md) | Normative standard on extrinsic coordinates, perimeter parameterization, and intrinsic invariants |
+| [REASONING_GUIDANCE_PATTERNS.md](./REASONING_GUIDANCE_PATTERNS.md) | Catalog of agent reasoning guidance patterns (DRA, Structure Recognition, Strategies) |

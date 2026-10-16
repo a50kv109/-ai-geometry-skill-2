@@ -207,3 +207,12 @@ In `src/engines/semantic/naturalLanguageAdapter.ts`, the Stand provides a determ
 - `"параллель к AB через C"` $\to$ `CONSTRUCT_PARALLEL` (reference: "chord_AB", through: "C")
 - `"углы треугольника 30 60 90"` $\to$ `SET_TRIANGLE_ANGLES` (A: 30, B: 60, C: 90)
 - `"какой угол при C?"` $\to$ `GET_MEASUREMENTS` (target: "angle_C")
+
+---
+
+## 7. Canonical Coordinate Tiers & Invariant Protection
+
+All automated reasoning agents consuming `SEMANTIC_INTERFACE.md` must respect the normative boundaries established in [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md):
+- When moving vertices via `SET_VERTEX_POSITION`, parameter `u \in [0, 1)` or polar angle $\theta$ represents an **extrinsic boundary coordinate** on the circle, NOT an internal vertex angle $\angle V$.
+- Commands querying measurements (`GET_MEASUREMENTS`) return internal polygon angles under semantic type `ANGLE_DEG`, which are frame-independent intrinsic invariants (Tier 3).
+- Canonical sorting: Agents comparing polygon representations across independent sessions must adopt either `WORLD_CANONICAL` (ascending polar angle $\theta$) or `INTRINSIC_SHAPE_CANONICAL` (anchor vertex opposite maximal side, CCW traversal).

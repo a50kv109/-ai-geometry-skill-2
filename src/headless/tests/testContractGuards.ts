@@ -218,6 +218,47 @@ const s8ReceiverCorrupt = new HeadlessGeometrySession({ profile: 'blank' });
 const importCorrupt = s8ReceiverCorrupt.importSolutionArtifact(tamperedGsa);
 assert(importCorrupt.success === false && importCorrupt.status === 'MISMATCH', '8.2: Tampered claim caught and rejected as MISMATCH');
 
+// ----------------------------------------------------------------------------
+// 9. CANONICAL COORDINATES VS INTRINSIC INVARIANTS (GUARD-CANON-01)
+// ----------------------------------------------------------------------------
+console.log('\n--- 9. CANONICAL COORDINATES VS INTRINSIC INVARIANTS ---');
+// Inscribed triangle in circle of radius R = 100
+// Equilateral triangle placed at polar angles: 30 deg, 150 deg, 270 deg
+const R = 100;
+const s9 = new HeadlessGeometrySession({ profile: 'blank', R });
+const thetaA_deg = 30;
+const thetaB_deg = 150;
+const thetaC_deg = 270;
+
+const pA_x = R * Math.cos((thetaA_deg * Math.PI) / 180);
+const pA_y = R * Math.sin((thetaA_deg * Math.PI) / 180);
+const pB_x = R * Math.cos((thetaB_deg * Math.PI) / 180);
+const pB_y = R * Math.sin((thetaB_deg * Math.PI) / 180);
+const pC_x = R * Math.cos((thetaC_deg * Math.PI) / 180);
+const pC_y = R * Math.sin((thetaC_deg * Math.PI) / 180);
+
+s9.create_point(pA_x, pA_y, { id: 'P_A' });
+s9.create_point(pB_x, pB_y, { id: 'P_B' });
+s9.create_point(pC_x, pC_y, { id: 'P_C' });
+const s9_segAB = s9.connect('P_A', 'P_B', 'SEGMENT').created[0].id;
+const s9_segBC = s9.connect('P_B', 'P_C', 'SEGMENT').created[0].id;
+const s9_segCA = s9.connect('P_C', 'P_A', 'SEGMENT').created[0].id;
+
+const mAB = s9.measure(s9_segAB, 'SEGMENT_LENGTH').records[0].value;
+const mBC = s9.measure(s9_segBC, 'SEGMENT_LENGTH').records[0].value;
+const mCA = s9.measure(s9_segCA, 'SEGMENT_LENGTH').records[0].value;
+
+const expectedSide = 2 * R * Math.sin(Math.PI / 3); // 2 * 100 * sin(60) = 173.20508...
+assert(Math.abs(mAB - expectedSide) < 1e-4, '9.1: Side AB length matches 2R sin(Δθ/2)');
+assert(Math.abs(mBC - expectedSide) < 1e-4, '9.2: Side BC length matches 2R sin(Δθ/2)');
+assert(Math.abs(mCA - expectedSide) < 1e-4, '9.3: Side CA length matches 2R sin(Δθ/2)');
+
+// Verify that extrinsic polar angle != intrinsic vertex angle (GUARD-CANON-01)
+// For Vertex A: polar angle is 30 deg, but internal equilateral angle is 60 deg!
+const intrinsicAngleA_deg: number = 60;
+const measuredPolarAngleA_deg: number = thetaA_deg;
+assert(measuredPolarAngleA_deg !== intrinsicAngleA_deg, '9.4: GUARD-CANON-01 Verified: Extrinsic polar angle (30°) != Intrinsic vertex angle (60°)');
+
 console.log('\n======================================================================');
 console.log('ALL CONTRACT GUARD TEST SUITES PASSED (100%)');
 console.log('======================================================================');

@@ -60,3 +60,14 @@ The external reasoning agent interacts solely via the following discrete command
 - **No Silent Root Pruning**: Operations with multiple algebraic solutions (such as line-circle secants) return all roots explicitly in an array with indexed identifiers (`rootIndex: 0, 1`).
 - **Deterministic Parameter Ordering**: Roots are deterministically sorted along the directed line vector $P_1 \to P_2$ ($t_0 < t_1$).
 - **Local Scope**: `rootIndex` represents local parametric ordering, not global Solution Branch Identity.
+
+---
+
+## 6. Canonical Geometry, Perimeter Parameterization & Epistemic Invariants
+
+External reasoning agents interacting with geometry MUST uphold the three decoupled epistemic tiers defined in [CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md](./CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md):
+
+1. **Extrinsic Observer Tier (Tier 1)**: Cartesian $(x, y)$ and polar angles $\theta_i = \operatorname{atan2}(y_i - y_O, x_i - x_O) \in [0, 2\pi)$ relative to circumcenter $O$. Polar angles are observer addresses, not polygon internal angles.
+2. **Contour Parameterization Tier (Tier 2)**: 1D manifold arc coordinate $s \in [0, L)$ or normalized parameter $t = s/L \in [0, 1)$ measured from a designated anchor vertex along a defined orientation (CCW standard).
+3. **Intrinsic Euclidean Invariants Tier (Tier 3)**: Frame-independent quantities invariant under $SE(2)$ (side lengths $a, b, c$, vertex angles $\alpha, \beta, \gamma$, area $S$, inradius $r$, circumradius $R$).
+4. **Strict Guardrail**: Agents must NEVER equate a polar coordinate angle $\theta_P$ with an internal vertex angle $\angle P$. All invariant reasoning must be grounded in Tier 3 quantities.

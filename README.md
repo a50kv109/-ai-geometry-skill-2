@@ -263,6 +263,8 @@ All documentation is located in the [`docs/`](./docs/) directory using relative 
 - [`docs/PATTERN_LIBRARY.md`](./docs/PATTERN_LIBRARY.md) — Audited Geometric Reasoning Pattern Palette.
 - [`docs/spectral_passport_integration.md`](./docs/spectral_passport_integration.md) — Experimental Spectral Analysis and FourierV2 Integration (TSL-01 – TSL-08).
 - [`docs/spectral_passport_schema.md`](./docs/spectral_passport_schema.md) — Spectral Passport Schema Hierarchy.
+- [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md) — Normative Standard: Extrinsic Coordinates, Perimeter Parameterization, and Intrinsic Invariants.
+- [`docs/REASONING_GUIDANCE_PATTERNS.md`](./docs/REASONING_GUIDANCE_PATTERNS.md) — Catalog of Agent Reasoning Guidance Patterns (DRA, Structure Recognition, Proving Strategies).
 
 ---
 

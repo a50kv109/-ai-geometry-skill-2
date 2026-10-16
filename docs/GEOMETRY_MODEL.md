@@ -62,3 +62,12 @@ All geometric evaluations use consistent mathematical constants to avoid floatin
 - Coordinate comparison epsilon: $\varepsilon = 10^{-4}$
 - Metric distance tolerance: $\text{tol} = 0.5\text{ px}$
 - Angular tolerance: $\pm 0.1^\circ$
+
+---
+
+## 5. Epistemic Tiers and Canonical Coordinate Model
+
+To prevent semantic conflation between observer coordinate addresses and intrinsic geometric invariants, all entities adhere to the three-tier model formalized in [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md):
+- **Tier 1 (Extrinsic Coordinates)**: Cartesian $(x, y)$ and polar angles $\theta(P) = \operatorname{atan2}(y - y_O, x - x_O) \pmod{2\pi}$ relative to circumcenter $O$.
+- **Tier 2 (Perimeter Parameterization)**: Arc length $s \in [0, L)$ and normalized parameter $t = s/L \in [0, 1)$ along the polygon or circle boundary from a canonical anchor vertex.
+- **Tier 3 (Intrinsic Invariants)**: Metric invariants invariant under $SE(2)$ (side lengths $a, b, c$, vertex angles $\alpha, \beta, \gamma$, area $S$, radii $R, r$).

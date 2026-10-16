@@ -44,6 +44,9 @@ The following areas are explicitly **unsupported** by AI Geometry Skill v1.0.0:
 6. **Artifact Identity Timestamp Determinism**:
    - *Status*: `CAPABILITY GAP`
    - *Boundary*: While geometric payload in PGS-2D is 100% deterministic, `artifactId` uses `Date.now()`, preventing bit-identical envelope hashes.
+7. **Extrinsic Polar Angles vs Intrinsic Polygon Angles**:
+   - *Status*: `NORMATIVE SPECIFICATION REGISTERED (docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md)`
+   - *Boundary*: Polar position angles $\theta \in [0, 2\pi)$ are extrinsic observer-dependent addresses. They do not equal intrinsic polygon angles $\angle V$. Agents attempting to substitute $\theta$ for $\angle V$ violate the semantic contract.
 
 ---
 
