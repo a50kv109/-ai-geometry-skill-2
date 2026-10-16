@@ -173,14 +173,14 @@ The Skill is **not an omniscient automated theorem solver** and explicitly docum
 
 | Action / Capability | Public Method | Return Type | Description |
 |:---|:---|:---:|:---|
-| **Create Point** | `create_point(x, y, options)` | `CompactActionResponse` | Adds an analytical point $(x, y)$ |
+| **Create Point** | `create_point(x, y, options?)` | `CompactActionResponse` | Adds an analytical point $(x, y)$ |
 | **Connect** | `connect(p1, p2, type)` | `CompactActionResponse` | Constructs a `SEGMENT` or infinite `LINE` |
 | **Create Circle** | `create_circle(center, radius)` | `CompactActionResponse` | Constructs a circle $C(O, R)$ |
-| **Construct Macro** | `construct(type, params)` | `CompactActionResponse` | Constructs perpendiculars, bisectors |
+| **Construct Macro** | `construct(type, params)` | `CompactActionResponse` | Executes deterministic macros: `PERPENDICULAR`, `PARALLEL`, `ANGLE_BISECTOR`, `PERPENDICULAR_BISECTOR` |
 | **Intersect** | `intersect(id1, id2)` | `CompactActionResponse` | Returns array of analytical root points (snapshot) |
-| **Move** | `move(pointId, x, y)` | `CompactActionResponse` | Displaces free vertex; cascades dependent macros |
-| **Observe** | `observe(mode, targetId?)` | `StructuredObservation` | Modes: `COMPACT`, `FULL`, `OBJECT`, `PROVENANCE` |
-| **Measure** | `measure(id, 'SEGMENT_LENGTH')`| `SemanticQuantity[]` | Returns exact metric length |
+| **Move** | `move(pointId, x, y)` | `CompactActionResponse` | Displaces free vertex; cascades dependent macro geometry |
+| **Observe** | `observe(mode, targetId?)` | `ObservationResult` | Modes: `COMPACT`, `FULL`, `OBJECT`, `PROVENANCE`, `RELATIONS`, `CONSTRAINTS`, `KNOWLEDGE` |
+| **Measure** | `measure(id, type?)` | `MeasureResult` | Returns exact metric length or radius |
 | **Verify** | `verify(sub, rel, ref)` | `VerificationResult` | Fixed tolerance verification ($\varepsilon = 10^{-4}$) |
 | **Fork / Rollback** | `fork()`, `rollback(id)` | `string` / `boolean` | Isolated exploratory scratchpads |
 | **Export GSA** | `exportSolutionArtifact()` | `GSASolutionArtifact` | Exports solution container |

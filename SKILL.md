@@ -79,6 +79,9 @@ session.create_point(0, 3, { id: 'P_C' });
 const sAB = session.connect('P_A', 'P_B', 'SEGMENT').created[0].id;
 const sAC = session.connect('P_A', 'P_C', 'SEGMENT').created[0].id;
 
+// Use construct for macros
+session.construct('PERPENDICULAR', { reference: sAB, through: 'P_C' });
+
 // 3. Measure exact metrics
 const mAB = session.measure(sAB, 'SEGMENT_LENGTH');
 console.log(mAB.records[0].value); // 4.0
@@ -94,7 +97,13 @@ const gsa = session.exportSolutionArtifact();
 
 ---
 
-## 4. Canonical Predicates & Boundaries
+## 4. Architectural Guardrails & Isolation
+
+- **Architectural Guardrails (Leak Protection)**: `HeadlessGeometrySession` acts as the strict interface boundary. It enforces the contract via input sanitization and invariant checks before/after mutations, ensuring no illegal states leak into the Core.
+- **State Isolation (Sandboxing)**: `fork()` and `rollback()` are mechanisms for speculative exploration. The active `session.state` remains the single canonical truth, while sandboxes allow for branch-based hypothesis testing.
+
+
+## 5. Canonical Predicates & Boundaries
 
 | Predicate | Algebraic Verification Formula | Tolerance |
 |:---|:---|:---:|
@@ -111,7 +120,7 @@ const gsa = session.exportSolutionArtifact();
 
 ---
 
-## 5. Normative Documentation & Verification References
+## 6. Normative Documentation & Verification References
 
 - **Canonical Geometry & Coordinates**: [`docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md`](./docs/CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md)
 - **Agent Reasoning Guidance (DRA)**: [`docs/AGENT_GUIDANCE_DRA.md`](./docs/AGENT_GUIDANCE_DRA.md)

@@ -21,7 +21,7 @@ The external reasoning agent interacts solely via the following discrete command
 - `create_point(x, y, options?)`: Creates an analytical point.
 - `connect(p1Id, p2Id, type)`: Constructs a `SEGMENT` or infinite `LINE`.
 - `create_circle(centerId, radius)`: Creates a Euclidean circle.
-- `construct(macroType, params)`: Executes deterministic macro constructions (`PERPENDICULAR`, `PARALLEL`, `ANGLE_BISECTOR`, `PERPENDICULAR_BISECTOR`).
+- `construct(macroType: 'PERPENDICULAR' | 'PARALLEL' | 'ANGLE_BISECTOR' | 'PERPENDICULAR_BISECTOR', params: object)`: Executes deterministic macro constructions.
 - `intersect(id1, id2)`: Solves analytical intersection equations (`LINE x LINE`, `LINE x CIRCLE`, `SEGMENT x SEGMENT`, etc.) and returns materialized point snapshots.
 - `move(pointId, x, y)`: Kinematically displaces a free vertex and cascades dependent macro geometry.
 - `erase(entityId)`: Deletes an entity and cascades deletion to derived dependents.
@@ -63,7 +63,12 @@ The external reasoning agent interacts solely via the following discrete command
 
 ---
 
-## 6. Canonical Geometry, Perimeter Parameterization & Epistemic Invariants
+## 6. Architectural Guardrails & Isolation
+
+- **Architectural Guardrails (Leak Protection)**: `HeadlessGeometrySession` acts as the strict interface boundary. It enforces the contract via input sanitization and invariant checks before/after mutations, ensuring no illegal states leak into the Core.
+- **State Isolation (Sandboxing)**: `fork()` and `rollback()` are mechanisms for speculative exploration. The active `session.state` remains the single canonical truth, while sandboxes allow for branch-based hypothesis testing.
+
+## 7. Canonical Geometry, Perimeter Parameterization & Epistemic Invariants
 
 External reasoning agents interacting with geometry MUST uphold the three decoupled epistemic tiers defined in [CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md](./CANONICAL_GEOMETRY_COORDINATES_AND_INVARIANTS.md):
 
