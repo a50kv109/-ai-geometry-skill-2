@@ -127,4 +127,5 @@ const gsa = session.exportSolutionArtifact();
 - **Final Audit Report**: [`docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md`](./docs/verification/AI_GEOMETRY_SKILL_V1_0_0_FINAL_AUDIT.md)
 - **Skill Passport**: [`docs/AI_GEOMETRY_SKILL_PASSPORT.md`](./docs/AI_GEOMETRY_SKILL_PASSPORT.md)
 - **Zero-Trust Artifact Protocol**: [`docs/GSA_SPECIFICATION.md`](./docs/GSA_SPECIFICATION.md)
+- **Geometric Invariant Evaluation (GIEM v0.1)**: [`docs/GIEM_V01_SPECIFICATION.md`](./docs/GIEM_V01_SPECIFICATION.md) — Isolated deterministic invariant evaluation engine (Level C isolation, not wired into `HeadlessGeometrySession`).
 

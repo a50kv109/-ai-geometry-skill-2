@@ -1,7 +1,8 @@
 # Geometric Invariant Evaluation Module (GIEM v0.1) — Specification
 
 > **Module Version**: `0.1.0`  
-> **Status**: `FROZEN_FOR_AUDIT`  
+> **Status**: `ACCEPTED_WITH_GAPS` (Independent Black-Box Audit Freeze)  
+> **Audited Commit**: `daf5a9b7d3d70c69f0f9793abcd7c760c8e1067f`  
 > **System Scope**: `AI Geometry Skill v1.0.0`  
 > **Architectural Role**: Isolated Deterministic Analytical & Invariant Verification Engine  
 > **Epistemic Invariant**: "The agent may be wrong. The stand must not be."
@@ -140,6 +141,10 @@ To protect IEEE-754 floating-point calculations from silent precision degradatio
   - Independently verifies primitivity of the triple: $\gcd(a, b, c) = 1$ (computed via `bigintGcdThree`).
   - *Scope clarification*: The auditor checks whether the target candidate $(a, b, c)$ is a valid primitive Pythagorean triple in the `BigInt` domain. In GIEM v0.1, it does not explicitly assert side-by-side component equality against $(m^2-n^2, 2mn, m^2+n^2)$; it verifies the mathematical invariant and primitivity properties.
 
+#### Key Limitations & Boundary Conditions (C1):
+- **Primitive Triples Only**: C1 is mathematically restricted to primitive Pythagorean triples ($m > n > 0$, $\gcd(m, n) = 1$, opposite parity). Non-primitive triples (e.g. $(6, 8, 10)$ scaled by $k = 2$) fail primitivity auditing and intentionally return `INVARIANT_VIOLATION`. This is an intended mathematical domain boundary, not an algorithmic defect.
+- **Parameter Ordering & Coprimality**: Requires $m > n > 0$, $\gcd(m, n) = 1$, and $(m - n) \not\equiv 0 \pmod 2$. Inputs violating these conditions return `INVALID_PARAMETER`.
+
 ---
 
 ### 5.2. Contract C2 / C2.1: Right Triangle Circumcenter (`RightTriangleCircumcenter`)
@@ -164,6 +169,11 @@ To protect IEEE-754 floating-point calculations from silent precision degradatio
    $$|\|MA\|^2 - R^2| \le \text{tol}(R^2), \quad |\|MB\|^2 - R^2| \le \text{tol}(R^2), \quad |\|MC\|^2 - R^2| \le \text{tol}(R^2)$$
    where $\text{tol}(R^2) = \varepsilon_{\text{abs}} + \varepsilon_{\text{rel}} \cdot R^2$.
    Any tampered, shifted, or invalid candidate is flagged as `INVARIANT_VIOLATION`.
+
+#### Key Limitations & Boundary Conditions (C2):
+- **Right-Angled Triangles Only**: Specialized strictly for right triangles with orthogonal vertex at $B$. Acute, obtuse, or general oblique triangles fail the right-angle precondition and return `INVALID_PARAMETER`.
+- **Scale and Coordinate Range**: Operates within $[-100000, 100000]$. Micro-legs ($\|BA\|^2 < 10^{-12}$ or $\|BC\|^2 < 10^{-12}$) and non-finite inputs return `INVALID_PARAMETER` or `NUMERIC_RANGE_EXCEEDED`.
+- **Floating-Point Mixed Tolerances**: Enforces $\varepsilon_{\text{abs}} = 10^{-7}$ and $\varepsilon_{\text{rel}} = 10^{-6}$; evaluations are bounded by IEEE-754 precision limits.
 
 ---
 
@@ -193,6 +203,11 @@ To protect IEEE-754 floating-point calculations from silent precision degradatio
    - Validates that $P, Q, T$ match midpoint coordinates $(a/2, 0), (a/2, b/2), (0, b/2)$ within mixed tolerance.
 3. **Zero-Trust Candidate Audit**:
    Detects false claims, falsified area numbers, tampered ratio values, or distorted vertex coordinates.
+
+#### Key Limitations & Boundary Conditions (C3):
+- **Canonical Axis-Aligned Right Triangle & Midpoint Rectangle Only**: Specialized strictly for canonical right triangles $O(0, 0), X(a, 0), Y(0, b)$ and the midpoint inscribed rectangle $O(0, 0), P(a/2, 0), Q(a/2, b/2), T(0, b/2)$. Not a generalized area solver for arbitrary triangles or arbitrary inscribed quadrilaterals.
+- **Strict Parameter Bounds**: Side parameters $a$ and $b$ must be strictly positive and satisfy $a, b \in [10^{-6}, 100000]$. Sub-micro dimensions ($< 10^{-6}$) return `INVALID_PARAMETER`; coordinates exceeding $100000$ or non-finite inputs return `NUMERIC_RANGE_EXCEEDED`.
+- **Constant Target Ratio**: Formally evaluates the invariant ratio $A_{\text{rect}} / A_{\text{triangle}} = 0.5$; other area ratios are out of contract scope.
 
 ---
 
@@ -249,12 +264,77 @@ npm run build                                        # PASS (Clean bundle genera
 
 ---
 
-## 8. Capability Gaps & Roadmap to Public Release
+## 8. Independent External Acceptance Audit (Grok Black-Box Audit)
 
-Before GIEM can be promoted from an isolated analytical engine to a public-facing skill component, the following checklist must be satisfied:
+An independent black-box acceptance audit was conducted by external auditor Grok on the GIEM v0.1 implementation.
 
-1. **Stage C4 Decision (Aggregate Orchestrator / Multi-Invariant Verifier)**:
-   - Determine whether a unified multi-contract auditor is required or whether contracts remain individual domain evaluators.
+### 8.1. Audit Provenance & Execution Environment
+- **Target Repository & Branch**: `https://github.com/a50kv109/-ai-geometry-skill-2`, branch `main`
+- **Audited Commit SHA**: `daf5a9b7d3d70c69f0f9793abcd7c760c8e1067f` (incorporating `56ea331 feat(giem): implement geometric invariant engine v0.1`)
+- **Evaluation Mode**: Zero-Trust Black-Box Read-Only Audit (no repository modifications, no commits/PRs, no wiring into Headless API, no `package.json` alterations).
+- **Audit Verdict**: `ACCEPTED WITH GAPS`
+
+### 8.2. Scope of the Independent Audit
+1. **Contract C1 (`PythagoreanTripleGenerator`)**: Exact integer generation on `BigInt` and Euclidean formula verification.
+2. **Contract C2 / C2.1 (`RightTriangleCircumcenter`)**: Thales' circumcenter and mixed-tolerance equidistance verification.
+3. **Contract C3 (`TriangleAreaInvariant`)**: Midpoint rectangle area ratio ($0.5$) validated against Gauss's Shoelace formula.
+4. **Boundary & Negative Cases**: Degenerate geometries, sub-micro dimensions ($< 10^{-6}$), out-of-bound coordinates ($> 100000$), $NaN$, $\pm\infty$, non-coprime parameters, identical parity.
+5. **Adversarial Tampering Rejection**: Tampered circumcenter coordinates, falsified rectangle areas, altered ratio numbers, and non-primitive triples were subjected to zero-trust candidate auditing, confirming **zero false passes**.
+6. **Isolation Verification**: Confirmed that Level C isolation is 100% intact: zero imports in `HeadlessGeometrySession`, zero mutations of the canonical kernel, no public barrel `index.ts`, and no pollution of `package.json`.
+
+### 8.3. Reported Test Suite Results
+In the external auditor's execution environment, all three standalone test suites executed via `npx tsx` passed unconditionally:
+- `npx tsx src/engines/giem/tests/giem_staged.test.ts`: **11 / 11 PASS (100%)**
+- `npx tsx src/engines/giem/tests/circumcenter.test.ts`: **7 / 7 PASS (100%)**
+- `npx tsx src/engines/giem/tests/areaRatio.test.ts`: **28 / 28 PASS (100%)**
+- **Total Standalone GIEM Tests**: **46 / 46 PASS (100%)**
+
+> **Epistemic Precision Statement**: The reported 46/46 test pass was recorded in the external auditor's verification environment. In accordance with the skill's epistemic discipline (`TOOL-VERIFIED FACT ≠ AGENT INTERPRETATION`), this empirical test pass demonstrates that all implemented test assertions and boundary checks succeed deterministically. It serves as empirical validation of the coded contracts, not an exhaustive mathematical proof over the infinite continuous domain $\mathbb{R}^2$.
+
+---
+
+## 9. Epistemic Classification & Information Hierarchy
+
+To maintain absolute clarity across project documentation, GIEM information is strictly partitioned into four distinct epistemic tiers:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        EPISTEMIC INFORMATION TIERS                     │
+├────────────────────────────────────────────────────────────────────────┤
+│  Tier 1: Verified Implementation Facts (Codebase Truth)               │
+│  ├── Source code files in src/engines/giem/                            │
+│  ├── Exact formulas (Euclid, Thales, Gauss Shoelace)                   │
+│  ├── Hardened numerical constants (MAX_COORD, MIN_SIDE, EPSILON_*)    │
+│  └── Deterministic local test pass (46/46 via npx tsx)                 │
+├────────────────────────────────────────────────────────────────────────┤
+│  Tier 2: Reported External Audit Findings (Grok Black-Box Audit)       │
+│  ├── Audit verdict: ACCEPTED WITH GAPS on commit daf5a9b               │
+│  ├── External environment test execution (46/46 PASS)                  │
+│  ├── Independent confirmation of Level C isolation                     │
+│  └── Independent verification of zero false passes                     │
+├────────────────────────────────────────────────────────────────────────┤
+│  Tier 3: Known Limitations & Domain Boundaries                        │
+│  ├── C1: Primitive triples only (non-primitives -> INVARIANT_VIOLATION)│
+│  ├── C2: Right triangles only, mixed tolerances (eps_abs=1e-7, rel=1e-6│
+│  ├── C3: Canonical right triangle & midpoint rectangle only (ratio 0.5)│
+│  └── Level C: Isolated from HeadlessGeometrySession & test:all         │
+├────────────────────────────────────────────────────────────────────────┤
+│  Tier 4: Future Roadmap & Release Criteria (Out of Scope for v0.1)    │
+│  ├── Stage C4 Aggregate Multi-Invariant Orchestrator                   │
+│  ├── Public runtime API adapters in HeadlessGeometrySession            │
+│  ├── Package export barrel (index.ts) in package.json                  │
+│  └── GSA certified claim predicate schemas for GIEM proofs             │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 10. Capability Gaps & Roadmap to Public Release
+
+Before GIEM can be promoted from an isolated analytical engine to a public-facing skill component, the following criteria must be addressed in subsequent milestones:
+
+1. **Stage C4 Decision (Aggregate Multi-Invariant Orchestrator)**:
+   - Determine whether a unified multi-contract orchestrator is required or whether contracts remain individual domain evaluators.
 2. **Level C Public Surface Decision**:
    - Determine whether `HeadlessGeometrySession` should receive optional invariant audit adapters (e.g. `session.auditInvariant(contractId, params)`), or whether GIEM should remain strictly an out-of-band analytical verifier.
 3. **Packaging / Export Decision**:

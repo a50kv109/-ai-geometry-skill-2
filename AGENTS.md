@@ -30,6 +30,7 @@ The **AI Geometry Skill** is a deterministic verification and research instrumen
 - Unverified student or agent proposals must never mutate `CANONICAL_GRAPH`.
 - Exploratory hypotheses must be executed strictly within `ExplorationRunner` sandboxes.
 - Failed verification attempts must leave the environment state 100% unaltered.
+- The Geometric Invariant Evaluation Module (`src/engines/giem/`) is maintained under strict **Level C isolation** ([`docs/GIEM_V01_SPECIFICATION.md`](./docs/GIEM_V01_SPECIFICATION.md)): it must never be imported into the kernel (`src/kernel/`), wired into `HeadlessGeometrySession`, or exported globally without explicit architectural authorization.
 
 ---
 

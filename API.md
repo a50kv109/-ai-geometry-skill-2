@@ -90,3 +90,11 @@ const session = new HeadlessGeometrySession({ profile: 'blank' });
 - **`importSolutionArtifact(artifact: GSASolutionArtifact): GSAImportReport`**  
   - Imports geometry into isolated clean session and independently evaluates all certified claims locally.
   - Mismatch or corrupted claims report `status: 'MISMATCH'`.
+
+---
+
+## 7. Isolated Invariant Evaluation Module (GIEM v0.1)
+
+> **Notice**: `HeadlessGeometrySession` is the **sole canonical external runtime API**. The Geometric Invariant Evaluation Module (`src/engines/giem/`) is maintained under **Level C isolation** and is intentionally not exported through this class or package exports.
+>
+> For out-of-band algebraic generation (C1: Pythagorean triples), Thales circumcenter auditing (C2), or area ratio invariant evaluation (C3), refer to [`docs/GIEM_V01_SPECIFICATION.md`](./docs/GIEM_V01_SPECIFICATION.md). Modules are imported via explicit file paths under `src/engines/giem/`.

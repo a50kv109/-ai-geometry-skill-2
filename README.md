@@ -263,6 +263,31 @@ The skill includes an experimental spectral analysis module under `src/experimen
 
 ---
 
+## 13.2. Geometric Invariant Evaluation Module (GIEM v0.1)
+
+The **Geometric Invariant Evaluation Module (GIEM v0.1)** provides high-assurance, deterministic algebraic generation and coordinate-level invariant verification routines under strict mathematical isolation.
+
+### Purpose & Supported Contracts:
+- **Contract C1 (`PythagoreanTripleGenerator`)**: Exact integer generation and verification of primitive Pythagorean triples using arbitrary-precision `BigInt` arithmetic (Euclid's formula $m^2 - n^2, 2mn, m^2 + n^2$).
+- **Contract C2 / C2.1 (`RightTriangleCircumcenter`)**: Thales' circumcenter calculation and zero-trust equidistance auditing under a hardened mixed absolute/relative numerical tolerance policy ($\varepsilon_{\text{abs}} = 10^{-7}, \varepsilon_{\text{rel}} = 10^{-6}$).
+- **Contract C3 (`TriangleAreaInvariant`)**: Geometric area ratio invariant verification ($A_{\text{rectangle}} / A_{\text{triangle}} = 1/2$) dual-pathed against independent coordinate-level Gauss Shoelace polygon area calculations.
+
+### Source Directory & Documentation:
+- **Source Path**: `src/engines/giem/`
+- **Specification & Audit Report**: [`docs/GIEM_V01_SPECIFICATION.md`](./docs/GIEM_V01_SPECIFICATION.md) (Status: `ACCEPTED_WITH_GAPS`, Audited Commit: `daf5a9b7d3d70c69f0f9793abcd7c760c8e1067f`).
+
+### Epistemic Isolation Notice:
+- **Level C Isolation**: GIEM is intentionally **not** integrated into `HeadlessGeometrySession` or runtime sessions, has no public barrel (`index.ts`) export, and does not alter `package.json`.
+- **Import Policy**: External experimental scripts import modules via explicit file paths (e.g. `import { TriangleAreaInvariant } from '@/src/engines/giem/invariants/TriangleAreaInvariant'`).
+- **Test Invocations**: Excluded from `npm run test:all` to keep canonical regression clean. Run directly via `npx tsx`:
+  ```bash
+  npx tsx src/engines/giem/tests/giem_staged.test.ts    # Contract C1 (11/11 PASS)
+  npx tsx src/engines/giem/tests/circumcenter.test.ts   # Contract C2 (7/7 PASS)
+  npx tsx src/engines/giem/tests/areaRatio.test.ts      # Contract C3 (28/28 PASS)
+  ```
+
+---
+
 ## 14. Documentation Map
 
 All documentation is located in the [`docs/`](./docs/) directory using relative Markdown links:
@@ -282,6 +307,7 @@ All documentation is located in the [`docs/`](./docs/) directory using relative 
 - [`docs/spectral_passport_integration.md`](./docs/spectral_passport_integration.md) — Experimental Spectral Analysis and FourierV2 Integration (TSL-01 – TSL-08).
 - [`docs/spectral_passport_schema.md`](./docs/spectral_passport_schema.md) — Spectral Passport Schema Hierarchy.
 - [`docs/REASONING_GUIDANCE_PATTERNS.md`](./docs/REASONING_GUIDANCE_PATTERNS.md) — Catalog of Agent Reasoning Guidance Patterns.
+- [`docs/GIEM_V01_SPECIFICATION.md`](./docs/GIEM_V01_SPECIFICATION.md) — Geometric Invariant Evaluation Module (GIEM v0.1) Specification, Contracts (C1–C3), Numerical Policy, and External Audit Report.
 
 ---
 
