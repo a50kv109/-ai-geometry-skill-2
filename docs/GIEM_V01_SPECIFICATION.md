@@ -12,6 +12,8 @@
 
 The **Geometric Invariant Evaluation Module (GIEM)** is a high-assurance, deterministic evaluation engine designed for the AI Geometry Skill. GIEM provides formal algebraic generators, coordinate-level invariant evaluators, and zero-trust independent auditing routines for Euclidean geometry.
 
+*Nomenclature Note*: In preliminary working drafts and early development iterations, the module was occasionally referred to as the "Geometric Invariant Engineering Module". The canonical, official project nomenclature is **Geometric Invariant Evaluation Module (GIEM)**.
+
 GIEM v0.1 implements three core geometric contracts:
 1. **Contract C1 (`PythagoreanTripleGenerator`)**: Exact integer generation and verification of primitive Pythagorean triples using arbitrary-precision `BigInt` arithmetic.
 2. **Contract C2 / C2.1 (`RightTriangleCircumcenter`)**: Thales' circumcenter calculation and independent equidistance auditing for right-angled triangles under a hardened mixed absolute/relative numerical tolerance policy.
@@ -48,7 +50,7 @@ GIEM adheres strictly to the architectural invariants defined in `docs/ARCHITECT
 │   src/engines/giem/                                                    │
 │   ├── contracts/types.ts           (Standard InvariantAuditReport)     │
 │   ├── bridges/BigIntNumberBridge.ts (Safe Integer Conversion)          │
-│   ├── utils/gcd.ts                 (Binary Euclid GCD on BigInt)       │
+│   ├── utils/gcd.ts                 (Euclidean algorithm with % on BigInt)
 │   ├── generators/PythagoreanTripleGenerator.ts (Contract C1)          │
 │   ├── invariants/RightTriangleCircumcenter.ts  (Contract C2/C2.1)      │
 │   ├── invariants/TriangleAreaInvariant.ts      (Contract C3)           │
@@ -69,8 +71,8 @@ To prevent ambiguity between code completion and runtime enablement, GIEM distin
 
 | Integration Level | Description | Status in GIEM v0.1 | Evidence |
 | :--- | :--- | :--- | :--- |
-| **Level A: Codebase Presence** | Code exists, types compile, unit tests execute in isolation. | **ACTIVE (PASS)** | All files in `src/engines/giem/`, 100% test pass (C1: 11/11, C2: 7/7, C3: 28/28). |
-| **Level B: Explicit Path Import** | Modules can be imported by explicit relative path into standalone scripts or external test harnesses. | **ACTIVE (AVAILABLE)** | Standalone imports like `import { TriangleAreaInvariant } from 'src/engines/giem/invariants/TriangleAreaInvariant'` are valid and statically typed. No barrel `index.ts` is exported to prevent accidental namespace leakage. |
+| **Level A: Codebase Presence** | Code exists, types compile, unit tests execute in isolation. | **ACTIVE (PASS)** | All files exist in `src/engines/giem/`, 100% test pass (C1: 11/11, C2: 7/7, C3: 28/28). |
+| **Level B: Explicit Path Import** | Modules can be imported by explicit path into standalone test harnesses or scripts. | **ACTIVE (AVAILABLE)** | Modules can be imported via project root alias (`import { TriangleAreaInvariant } from '@/src/engines/giem/invariants/TriangleAreaInvariant'`) or relative path (`../engines/giem/...`). Bare non-relative specifiers without `@/` or `./` are not resolved under bundler module resolution. No barrel `index.ts` is exported to prevent accidental namespace leakage. |
 | **Level C: Runtime / Public API Integration** | Connected to `HeadlessGeometrySession`, exported in public manifests, exposed to interactive UI, or embedded in GSA export. | **NOT INTEGRATED (FROZEN)** | `HeadlessGeometrySession.ts` contains 0 references to `giem`. No UI bindings exist. Intentionally withheld to guarantee epistemic isolation. |
 
 ---
@@ -129,14 +131,14 @@ To protect IEEE-754 floating-point calculations from silent precision degradatio
   $$a = m^2 - n^2, \quad b = 2mn, \quad c = m^2 + n^2$$
 - **Preconditions**:
   1. Strict order and positivity: $m > n > 0$.
-  2. Coprimality: $\gcd(m, n) = 1$ (computed via binary Euclid algorithm in `src/engines/giem/utils/gcd.ts`).
+  2. Coprimality: $\gcd(m, n) = 1$ (computed via the Euclidean algorithm using modulo division `%` on `BigInt` in `src/engines/giem/utils/gcd.ts`).
   3. Opposite parity: $(m - n) \not\equiv 0 \pmod 2$.
 - **Independent Auditor (`PythagoreanTripleGenerator.audit`)**:
-  - Validates preconditions.
-  - Independently verifies the Pythagorean invariant: $a^2 + b^2 = c^2$.
-  - Independently verifies primality of triple: $\gcd(a, b, c) = 1$.
-  - Verifies positivity: $a > 0, b > 0, c > 0$.
-  - Compares candidate triple against exact analytical generation (zero-trust claim audit).
+  - Validates preconditions on parameters $m$ and $n$ ($m > n > 0$, $\gcd(m, n) = 1$, and $(m - n) \not\equiv 0 \pmod 2$).
+  - Verifies strict positivity of sides: $a > 0, b > 0, c > 0$.
+  - Independently verifies the exact algebraic Pythagorean identity: $a^2 + b^2 = c^2$.
+  - Independently verifies primitivity of the triple: $\gcd(a, b, c) = 1$ (computed via `bigintGcdThree`).
+  - *Scope clarification*: The auditor checks whether the target candidate $(a, b, c)$ is a valid primitive Pythagorean triple in the `BigInt` domain. In GIEM v0.1, it does not explicitly assert side-by-side component equality against $(m^2-n^2, 2mn, m^2+n^2)$; it verifies the mathematical invariant and primitivity properties.
 
 ---
 
@@ -214,26 +216,35 @@ This prevents false rejections across scales ranging from $10^{-6}$ to $10^{5}$.
 
 ## 7. Verification Baseline & Test Audit Summary
 
-All verification suites pass unconditionally:
+### 7.1. Test Execution Commands & Structure
+The project `package.json` contains no generic `test` or `npm test` script. Furthermore, `npm run test:all` executes the 31 core regression suites and deliberately excludes GIEM suites to maintain strict Level C isolation.
+
+GIEM unit and invariant tests are executed directly via `npx tsx` without modifying `package.json`:
 
 ```bash
-# 1. GIEM Invariant & Generator Suites
-npm test -- src/engines/giem/tests/giem_staged.test.ts    # PASS (11/11 tests)
-npm test -- src/engines/giem/tests/circumcenter.test.ts   # PASS (7/7 tests)
-npm test -- src/engines/giem/tests/areaRatio.test.ts      # PASS (28/28 tests)
+# 1. GIEM Standalone Test Suites (Executed via npx tsx)
+npx tsx src/engines/giem/tests/giem_staged.test.ts    # PASS (11/11 tests, 100%)
+npx tsx src/engines/giem/tests/circumcenter.test.ts   # PASS (7/7 tests, 100%)
+npx tsx src/engines/giem/tests/areaRatio.test.ts      # PASS (28/28 tests, 100%)
+# Total GIEM standalone tests: 46/46 passed (100%)
+```
 
-# 2. Kernel Invariant Baseline
-npm run test:kernel                                       # PASS (74/74 tests)
+### 7.2. Project Regression Baseline
+All core system regression baselines continue to pass unconditionally:
 
-# 3. Environment Contract Baseline
-npm run test:env                                          # PASS (18/18 tests)
+```bash
+# 2. Kernel Invariant Baseline (Canonical Graph)
+npm run test:kernel                                  # PASS (74/74 tests, 100%)
 
-# 4. Project Full Test Baseline
-npm run test:all                                          # PASS (30/30 suites, 100%)
+# 3. Environment Contract Baseline (Stand Facade & Isolation)
+npm run test:env                                     # PASS (18/18 tests, 100%)
+
+# 4. Project Full Regression Suite
+npm run test:all                                     # PASS (31/31 suites, 100%)
 
 # 5. Typecheck & Build
-npm run lint                                              # PASS (tsc --noEmit, 0 errors)
-npm run build                                             # PASS (Clean bundle generation)
+npm run lint                                         # PASS (tsc --noEmit, 0 errors)
+npm run build                                        # PASS (Clean bundle generation)
 ```
 
 ---
