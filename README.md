@@ -234,6 +234,19 @@ npm run build
 npx tsx examples/basic-verification/index.ts
 ```
 
+## Optional schematic observation adapter
+
+`src/adapters/schematic-reasoning/observationAdapter.ts` accepts normalized point and line/segment observations from a host agent, maps them through one explicitly directed 3×3 homography (when needed), and creates target geometry through the existing `HeadlessGeometrySession` API. Every observation names its source and coordinate frame. The target frame must be a `geometry-model` frame in millimeters (`mm`), matching the target core's measurement contract; any unit conversion must be encoded in the caller-supplied homography, because the adapter does not infer scale or convert units. Original observations, quality/confidence metadata, and the applied transform are retained in a provenance sidecar because the target core's `GeometryProvenance` describes constructions.
+
+This is an optional boundary adapter; it does not run vision, detect image features, infer transform chains, or change the core's verification semantics. A target-core geometric relation check is reported separately from image-localization and physical-measurement accuracy, which remain `NOT_EVALUATED` without independent evidence.
+
+```bash
+npm run test:schematic-observation
+npm run example:schematic-observation
+```
+
+The example uses synthetic hand-authored coordinates only. See [`docs/SCHEMATIC_CORE_INTEGRATION_AUDIT.md`](./docs/SCHEMATIC_CORE_INTEGRATION_AUDIT.md) for the input boundary and [`docs/FIX_OBSERVATION_ADAPTER_01_REPORT.md`](./docs/FIX_OBSERVATION_ADAPTER_01_REPORT.md) for the adapter hardening results.
+
 ### Confirmed Audit Baseline
 - **Autonomous Kernel Tests (`npm run test:kernel`)**: 74 / 74 PASS (100%)
 - **Environment Contract Tests (`npm run test:env`)**: 18 / 18 PASS (100%)
